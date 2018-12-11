@@ -89,8 +89,9 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):  # Python的多重繼承 Mai
     def clear_layout_onClick(self):
         for i in reversed(range(self.ltest.count())): 
             self.ltest.itemAt(i).widget().setParent(None)
-        #self.listWidget.removeItemWidget(self.listWidget.takeItem(0))
-
+        
+        for i in reversed(range(self.test.count())): 
+            self.test.itemAt(i).widget().setParent(None)
 
         
     #在LAYOUT裡畫圖
@@ -120,31 +121,43 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):  # Python的多重繼承 Mai
         
         w=np.array(w)
 
+        if (self.all.isChecked() == True):
+            for k in range(int(self.learn.text())):
+                if ((k+1)**2<int(self.learn.text())+1<=(k+2)**2):
+                    sizeoffig=k+2
+                    break
+            if (int(self.learn.text())==0):
+                sizeoffig=1
+            plt.subplot(sizeoffig,sizeoffig,1)                              
+            plt.imshow(w,cmap='gray')
+            plt.title("0 times")
+                    
+            x=w.reshape((-1,size))
+            for i in range(int(self.learn.text())):
+                for j in range(len(x)):
+                    plt.subplot(sizeoffig,sizeoffig,i+2)                              
+                    w=x.reshape((-1,a))
+                    plt.imshow(w,cmap='gray')
+                    plt.title("%d times" %(i+1))        
+                    xtemp=[]
+                    for k in range(len(x[0])):
+                        xtemp.append(self.sgn(W[k].dot(x[j]),theta[k]))
+                    x[j]=xtemp
         
-        for k in range(int(self.learn.text())):
-            if ((k+1)**2<int(self.learn.text())+1<=(k+2)**2):
-                sizeoffig=k+2
-                break
-        if (int(self.learn.text())==0):
-            sizeoffig=1
-        plt.subplot(sizeoffig,sizeoffig,1)                              
-        plt.imshow(w,cmap='gray')
-        plt.title("0 times")
-                
-        x=w.reshape((-1,size))
-        for i in range(int(self.learn.text())):
-            for j in range(len(x)):
-                plt.subplot(sizeoffig,sizeoffig,i+2)                              
-                w=x.reshape((-1,a))
-                plt.imshow(w,cmap='gray')
-                plt.title("%d times" %(i+1))        
-                xtemp=[]
-                for k in range(len(x[0])):
-                    xtemp.append(self.sgn(W[k].dot(x[j]),theta[k]))
-                x[j]=xtemp
-        plt.tight_layout
-                
-  
+        if (self.one.isChecked() == True):
+            x=w.reshape((-1,size))
+            for i in range(int(self.learn.text())):
+                for j in range(len(x)):
+                    xtemp=[]
+                    for k in range(len(x[0])):
+                        xtemp.append(self.sgn(W[k].dot(x[j]),theta[k]))
+                    x[j]=xtemp  
+         
+                             
+            w=x.reshape((-1,a))
+            plt.imshow(w,cmap='gray') 
+                    
+                    
     def sgn(self,u,theta):
         if (u>theta):
             return 1
