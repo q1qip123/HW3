@@ -14,7 +14,7 @@ Ui_MainWindow, QtBaseClass = uic.loadUiType(mpath)
 W=[]
 theta=[]
 size=0
-
+a=0
 class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):  # Python的多重繼承 MainUi 繼承自兩個類別
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
@@ -35,7 +35,7 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):  # Python的多重繼承 Mai
         
     # 點擊按鈕，讀取所選的文字檔
     def load_onClick(self):
-        global W,theta,size
+        global W,theta,size,a
         p=[]
         w=[]
         f=open(dpath+self.menu.currentText(),'r') 
@@ -56,8 +56,10 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):  # Python的多重繼承 Mai
         
         if(self.menu.currentText()=='Basic_Training.txt'):
             size=108
+            a=9
         elif(self.menu.currentText()=='Bonus_Training.txt'):
             size=100
+            a=10
         w=np.array(w)                
         w1=w.reshape((-1,size))
         W=np.zeros((size,size))
@@ -93,7 +95,12 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):  # Python的多重繼承 Mai
         
     #在LAYOUT裡畫圖
     def plot3d(self):
-        global W,theta,size
+        global W,theta,size,a
+        figure = plt.figure()
+        canvas = FigureCanvas(figure)
+        self.ltest.addWidget(canvas)
+        
+        
         p=[]
         w=[]
         f=open(dpath+self.menu_2.currentText(),'r') 
@@ -111,23 +118,33 @@ class MainUi(QtWidgets.QMainWindow, Ui_MainWindow):  # Python的多重繼承 Mai
             p=[]                    
             line=f.readline()
         
-        w=np.array(w)                
+        w=np.array(w)
+
+        
+        for k in range(int(self.learn.text())):
+            if ((k+1)**2<int(self.learn.text())+1<=(k+2)**2):
+                sizeoffig=k+2
+                break
+        if (int(self.learn.text())==0):
+            sizeoffig=1
+        plt.subplot(sizeoffig,sizeoffig,1)                              
+        plt.imshow(w,cmap='gray')
+        plt.title("0 times")
+                
         x=w.reshape((-1,size))
         for i in range(int(self.learn.text())):
             for j in range(len(x)):
+                plt.subplot(sizeoffig,sizeoffig,i+2)                              
+                w=x.reshape((-1,a))
+                plt.imshow(w,cmap='gray')
+                plt.title("%d times" %(i+1))        
                 xtemp=[]
                 for k in range(len(x[0])):
                     xtemp.append(self.sgn(W[k].dot(x[j]),theta[k]))
                 x[j]=xtemp
-        
-        w=x.reshape((int(size/len(x)),-1))        
-        figure = plt.figure()
-        canvas = FigureCanvas(figure)
-        self.ltest.addWidget(canvas)
-        plt.imshow(w,cmap='gray')
-        plt.ylabel('X2')
-        plt.xlabel('X1')
-    
+        plt.tight_layout
+                
+  
     def sgn(self,u,theta):
         if (u>theta):
             return 1
