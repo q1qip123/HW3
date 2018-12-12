@@ -1,16 +1,15 @@
-from PyQt5 import QtWidgets,uic
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets
+#from PyQt5.QtWidgets import *
 import os
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import numpy as np
-import random,math
 #from mpl_toolkits.mplot3d import Axes3D
 path = os.getcwd()
-#from  Main_Window import Ui_MainWindow
+from  Main_Window import Ui_MainWindow
 dpath = path  + os.sep + "Hopfield_dataset" + os.sep
-mpath = path +os.sep+"ui"+os.sep +"Main_Window.ui"
-Ui_MainWindow, QtBaseClass = uic.loadUiType(mpath)
+#mpath = path +os.sep+"ui"+os.sep +"Main_Window.ui"
+#Ui_MainWindow, QtBaseClass = uic.loadUiType(mpath)
 W=[]
 theta=[]
 size=0
